@@ -1,6 +1,7 @@
 from collections import defaultdict
 import itertools
 
+
 def parse_file(filename):
     cur_seq = None
     domains = {}
@@ -19,7 +20,7 @@ def parse_file(filename):
     return domains
 
 
-def get_domain(lookup, name, file_name):
+def get_domain(lookup, name, file_name, f=None, count=-1):
     out_file = open(name + "_" + file_name, "w")
     cur_lines = []
     cur_name = None
