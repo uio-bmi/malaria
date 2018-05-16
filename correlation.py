@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     with open(sys.argv[1] + "graph_predictions.fasta", "w") as f:
         for name, r in res.items():
-            f.write("> %s\n" % name)
+            f.write(">%s\n" % name)
             f.write(r+"\n")
 
     # 
