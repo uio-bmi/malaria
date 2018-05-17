@@ -5,7 +5,8 @@ def get_seqs(filename):
     return {name: r.seq for name, r in seqs.items()}
 
 def check_align(seq1, seq2):
-    return pairwise2.align.globalxx(seq1, seq2, score_only=True)/len(seq1)
+    print(seq1, seq2)
+    return pairwise2.align.globalxx(seq1, seq2, score_only=True)/len(seq2)
 
 def main(pred_seqs, true_seqs):
     pairs = []

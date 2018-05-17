@@ -82,7 +82,7 @@ if __name__ == "__main__":
     with open(sys.argv[1] + "graph_predictions.fasta", "w") as f:
         for name, r in res.items():
             f.write(">%s\n" % name)
-            f.write(r+"\n")
+            f.write(r.upper()+"\n")
 
     # 
     # path = predict_path(np.load(data_folder + "tmp_align_corr.npy"), 

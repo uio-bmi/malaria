@@ -2,3 +2,7 @@
 *~
 ~*
 *.clustal
+*tmp*
+*.fa
+*.json
+*.txt
