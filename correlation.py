@@ -29,27 +29,37 @@ def get_correlation(predictor_graph_name, outcome_graph_name):
         for p_node in p_nodes:
             corr_struct[p_node, list(o_nodes)] += 1
 
-    return corr_struct/len(predictor_nodes)
+    return corr_struct / len(predictor_nodes)
 
 
 def get_path_correlation(corr_struct, nodes):
+    #print("nodes in get path corr: %s" % sorted(list(nodes)))
     node_correlation = corr_struct[nodes, :]
-    correlation = np.sum(node_correlation, axis=0)/len(nodes)
+    correlation = np.sum(node_correlation, axis=0)
+    #print(" Returned corr %s" % correlation[50:60])
+    #print(len(correlation))
     return correlation
 
 
 def get_correlations(path, corr):
     node_ids = {mapping.start_position.node_id for mapping in path.mappings}
-    return get_path_correlation(corr, list(node_ids))
+    #print("Node ids: %s" % list(sorted(node_ids)))
+    corr = get_path_correlation(corr, list(node_ids)) 
+    return corr
+
 
 def predict_path(corr, graph):
+    print(corr[0:20])
     next_nodes = list(graph.get_first_blocks())
     nodes = []
     while next_nodes:
         vals = corr[next_nodes]
-        next_node = next_nodes[np.argmax(vals)]
+        #print("  %s" % vals) 
+        best_next = np.argmax(vals)
+        next_node = next_nodes[best_next]
         nodes.append(next_node)
         next_nodes = list(graph.adj_list[next_node])
+    #print(nodes)
     return nodes
 
 def get_sequence(sequence_graph, node_ids):
