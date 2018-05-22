@@ -4,6 +4,8 @@ from pyvg.conversion import get_json_paths_from_json
 import offsetbasedgraph as obg
 import numpy as np
 import json
+from malaria.correlation import create_corr_struct, \
+    get_path_correlation, predict_path
 
 
 def get_alignments(filename):
@@ -25,45 +27,17 @@ def get_correlation(predictor_graph_name, outcome_graph_name):
     M = len(o_graph.nodes) + 1
     N = len(p_graph.nodes) + 1
 
-    return create_corr_struct(predictor_nodes, outcome_nodes,
-                              M, N)
-
-
-def create_corr_struct(predictor_paths, outcome_paths, M, N):
-    corr_struct = np.zeros((N, M), dtype="int")
-    for path, p_nodes in predictor_paths.items():
-        o_nodes = outcome_paths[path]
-        for p_node in p_nodes:
-            corr_struct[p_node, list(o_nodes)] += 1
-
-    return corr_struct / len(predictor_paths)
-
-
-def get_path_correlation(corr_struct, nodes):
-    node_correlation = corr_struct[nodes, :]
-    correlation = np.sum(node_correlation, axis=0)
-    return correlation
+    return create_corr_struct(
+        predictor_nodes, outcome_nodes,
+        M, N)
 
 
 def get_correlations(path, corr):
     node_ids = {mapping.start_position.node_id
                 for mapping in path.mappings}
+
     corr = get_path_correlation(corr, list(node_ids))
     return corr
-
-
-def predict_path(corr, graph):
-    print(corr[0:20])
-    next_nodes = list(graph.get_first_blocks())
-    nodes = []
-    while next_nodes:
-        vals = corr[next_nodes]
-        best_next = np.argmax(vals)
-        next_node = next_nodes[best_next]
-        nodes.append(next_node)
-        next_nodes = list(graph.adj_list[next_node])
-
-    return nodes
 
 
 def get_sequence(sequence_graph, node_ids):
@@ -88,6 +62,7 @@ def main(alignments_file_name, corr_file_name):
     return {name: get_sequence(cidra_sequence_graph, pred)
             for name, pred in predicted.items()}
 
+
 if __name__ == "__main__":
     import sys
     data_folder = "../../data/malaria/pfemp_sequences/150genes/"
@@ -108,7 +83,3 @@ if __name__ == "__main__":
     #                     obg.Graph.from_file(data_folder + "cidra.nobg"))
     # print(get_sequence(obg.SequenceGraph.from_file(data_folder + "cidra.nobg.sequences"),
     #                    path))
-    
-                       
-    
-
