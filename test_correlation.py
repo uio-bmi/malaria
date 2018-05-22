@@ -2,7 +2,8 @@ import pytest
 import numpy as np
 import offsetbasedgraph as obg
 
-from malaria.correlation import *
+
+from malaria.corrstruct import *
 
 
 @pytest.fixture
