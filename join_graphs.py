@@ -2,18 +2,13 @@ import json
 import subprocess
 import os
 import shutil
-
+from pyvg import call_vg
 
 def domain_names():
     f = open("../domain_names.txt")
     names = [name.strip() for name in f.readlines()]
     f.close()
     return names
-
-def call_vg(command):
-    print("Command: " + command)
-    res = subprocess.check_output(command.split())
-    return res.decode("utf-8")    
 
 class GraphJoiner:
     def __init__(self, graph_file_names):
