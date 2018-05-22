@@ -14,5 +14,5 @@ cat one_line.tmp | while read -r ONE; do
     vg align -Q $id2 -s $TWO $2 | vg view -aj - >> alignments.json  #| grep -o -P '.{0,0}identity.{0,7}'
 done
 
-python3 correlation.py alignments.json
+python3 malaria/correlation.py alignments.json
 

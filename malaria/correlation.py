@@ -5,6 +5,7 @@ import offsetbasedgraph as obg
 import numpy as np
 import json
 
+
 def get_alignments(filename):
     return (json.loads(line) for line in open(filename))
 
@@ -21,30 +22,32 @@ def get_correlation(predictor_graph_name, outcome_graph_name):
     o_graph = Graph.from_file(outcome_graph_name)
     predictor_nodes = get_path_nodes(p_graph)
     outcome_nodes = get_path_nodes(o_graph)
-    N = len(p_graph.nodes) + 1
     M = len(o_graph.nodes) + 1
-    corr_struct = np.zeros((N, M), dtype="int")
+    N = len(p_graph.nodes) + 1
 
-    for path, p_nodes in predictor_nodes.items():
-        o_nodes = outcome_nodes[path]
+    return create_corr_struct(predictor_nodes, outcome_nodes,
+                              M, N)
+
+
+def create_corr_struct(predictor_paths, outcome_paths, M, N):
+    corr_struct = np.zeros((N, M), dtype="int")
+    for path, p_nodes in predictor_paths.items():
+        o_nodes = outcome_paths[path]
         for p_node in p_nodes:
             corr_struct[p_node, list(o_nodes)] += 1
 
-    return corr_struct / len(predictor_nodes)
+    return corr_struct / len(predictor_paths)
 
 
 def get_path_correlation(corr_struct, nodes):
-    #print("nodes in get path corr: %s" % sorted(list(nodes)))
     node_correlation = corr_struct[nodes, :]
     correlation = np.sum(node_correlation, axis=0)
-    #print(" Returned corr %s" % correlation[50:60])
-    #print(len(correlation))
     return correlation
 
 
 def get_correlations(path, corr):
-    node_ids = {mapping.start_position.node_id for mapping in path.mappings}
-    # print("Node ids: %s" % list(sorted(node_ids)))
+    node_ids = {mapping.start_position.node_id
+                for mapping in path.mappings}
     corr = get_path_correlation(corr, list(node_ids))
     return corr
 
@@ -74,13 +77,16 @@ def main(alignments_file_name, corr_file_name):
     paths = get_alignments(alignments_file_name)
     paths = [Alignment.from_json(path) for path in paths]
     print(len(paths))
-    corrs = {path.name: get_correlations(path.path, corr_struct) for path in paths}
+    corrs = {path.name: get_correlations(path.path, corr_struct)
+             for path in paths}
     print(len(corrs))
     cidra_graph = obg.Graph.from_file(data_folder + "cidra.nobg")
-    cidra_sequence_graph = obg.SequenceGraph.from_file(data_folder + "cidra.nobg.sequences")
+    cidra_sequence_graph = obg.SequenceGraph.from_file(
+        data_folder + "cidra.nobg.sequences")
     predicted = {name: predict_path(corr, cidra_graph)
                  for name, corr in corrs.items()}
-    return {name: get_sequence(cidra_sequence_graph, pred) for name, pred in predicted.items()}
+    return {name: get_sequence(cidra_sequence_graph, pred)
+            for name, pred in predicted.items()}
 
 if __name__ == "__main__":
     import sys
