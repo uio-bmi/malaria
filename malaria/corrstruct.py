@@ -1,4 +1,5 @@
 import numpy as np
+from collections import defaultdict
 
 
 def create_corr_struct(predictor_paths, outcome_paths, M, N):
@@ -10,12 +11,10 @@ def create_corr_struct(predictor_paths, outcome_paths, M, N):
 
     return corr_struct / len(predictor_paths)
 
-
 def get_path_correlation(corr_struct, nodes):
     node_correlation = corr_struct[nodes, :]
     correlation = np.sum(node_correlation, axis=0)
     return correlation
-
 
 def predict_path(corr, graph):
     next_nodes = list(graph.get_first_blocks())

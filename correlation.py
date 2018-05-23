@@ -4,7 +4,7 @@ from pyvg.conversion import get_json_paths_from_json
 import offsetbasedgraph as obg
 import numpy as np
 import json
-from malaria.correlation import create_corr_struct, \
+from malaria.corrstruct import create_corr_struct, \
     get_path_correlation, predict_path
 
 
@@ -48,6 +48,7 @@ def get_sequence(sequence_graph, node_ids):
 
 def main(alignments_file_name, corr_file_name):
     corr_struct = np.load(corr_file_name)
+    corr_struct = np.log(corr_struct + 0.01)
     paths = get_alignments(alignments_file_name)
     paths = [Alignment.from_json(path) for path in paths]
     print(len(paths))
