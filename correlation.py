@@ -4,8 +4,8 @@ from pyvg.conversion import get_json_paths_from_json
 import offsetbasedgraph as obg
 import numpy as np
 import json
-from malaria.corrstruct import create_corr_struct, \
-    get_path_correlation, predict_path
+from malaria.edgestruct import create_corr_struct, \
+    get_path_correlation, predict_path, save, load
 
 
 def get_alignments(filename):
@@ -15,7 +15,7 @@ def get_alignments(filename):
 def get_path_nodes(graph):
     paths = graph.paths
     return {path.name:
-            {mapping.start_position.node_id for mapping in path.mappings}
+            [mapping.start_position.node_id for mapping in path.mappings]
             for path in paths}
 
 
@@ -47,8 +47,8 @@ def get_sequence(sequence_graph, node_ids):
 
 
 def main(alignments_file_name, corr_file_name):
-    corr_struct = np.load(corr_file_name)
-    corr_struct = np.log(corr_struct + 0.01)
+    corr_struct = load(corr_file_name)
+    # corr_struct = np.log(corr_struct + 0.01)
     paths = get_alignments(alignments_file_name)
     paths = [Alignment.from_json(path) for path in paths]
     print(len(paths))
@@ -67,12 +67,12 @@ def main(alignments_file_name, corr_file_name):
 if __name__ == "__main__":
     import sys
     data_folder = "../../data/malaria/pfemp_sequences/150genes/"
-    # corr = get_correlation(data_folder+"dbla.json", data_folder+"cidra.json")
-    # np.save(data_folder + "dbla_cidra_corr.npy", corr)
-    # alignment_corr = get_correlations(data_folder+"alignments.json", data_folder+"dbla_cidra_corr.npy")
+    corr = get_correlation(data_folder+"dbla.json", data_folder+"cidra.json")
+    save(data_folder + "dbla_cidra_corr", corr)
+    # alignment_cporr = get_correlations(data_folder+"alignments.json", data_folder+"dbla_cidra_corr.npy")
     # np.save(data_folder + "tmp_align_corr.npy", alignment_corr)
     res = main(sys.argv[1],
-               data_folder + "dbla_cidra_corr.npy")
+               data_folder + "dbla_cidra_corr")
 
     with open(sys.argv[1] + "graph_predictions.fasta", "w") as f:
         for name, r in res.items():

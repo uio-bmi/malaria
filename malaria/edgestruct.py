@@ -1,9 +1,20 @@
 import numpy as np
+import pickle
 from collections import defaultdict
 
+def intdefaultdict():
+    return defaultdict(int)
 
-def create_corr_struct(predictor_paths, outcome_paths):
-    corr_struct = defaultdict(lambda: defaultdict(int))
+def save(filename, struct):
+    with open(filename+".pkl", "wb") as f:
+        pickle.dump(struct, f, pickle.HIGHEST_PROTOCOL)
+
+def load(filename):
+    with open(filename+".pkl", "rb") as f:
+        return pickle.load(f)
+
+def create_corr_struct(predictor_paths, outcome_paths, M=0, N=0):
+    corr_struct = defaultdict(intdefaultdict)
     ns = defaultdict(int)
     for path, p_nodes in predictor_paths.items():
         o_nodes = outcome_paths[path]
@@ -11,9 +22,7 @@ def create_corr_struct(predictor_paths, outcome_paths):
         p_edges = list(zip([0]+p_nodes[:-1], p_nodes))
         for e in p_edges:
             ns[e] += 1
-            print("#", e)
             for e2 in o_edges:
-                print("---", e2)
                 corr_struct[e][e2] += 1
     for key, v_dict in corr_struct.items():
         for k in v_dict.keys():

@@ -2,14 +2,25 @@ import numpy as np
 from collections import defaultdict
 
 
+def save(filename, struct):
+    np.save(filename+".npy", struct)
+
+
+def load(filename, struct):
+    return np.load(filename+".npy")
+
+
 def create_corr_struct(predictor_paths, outcome_paths, M, N):
-    corr_struct = np.zeros((N, M), dtype="int")
+    corr_struct = np.zeros((N, M), dtype="float")
+    scale = np.zeros(N, dtype="float")
     for path, p_nodes in predictor_paths.items():
         o_nodes = outcome_paths[path]
         for p_node in p_nodes:
             corr_struct[p_node, list(o_nodes)] += 1
-
-    return corr_struct / len(predictor_paths)
+            scale[p_node] += 1
+    print(np.flatnonzero(scale == 0))
+    corr_struct[1:, 1:] /= scale[1:, None]
+    return corr_struct
 
 def get_path_correlation(corr_struct, nodes):
     node_correlation = corr_struct[nodes, :]
