@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pickle
 from collections import defaultdict
@@ -27,7 +29,7 @@ def create_corr_struct(predictor_paths, outcome_paths, M=0, N=0):
     for key, v_dict in corr_struct.items():
         for k in v_dict.keys():
             v_dict[k] /= ns[key]
-
+            # v_dict[k] = math.log(v_dict[k]+0.001)
     return corr_struct
 
 
