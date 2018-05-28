@@ -67,9 +67,8 @@ def main(alignments_file_name, corr_file_name):
 
 if __name__ == "__main__":
     import sys
-    data_folder = "./504/"  # "../../data/malaria/pfemp_sequences/150genes/"
-    corr = get_correlation(data_folder+"dbla_mafft.json",
-                           data_folder+"cidra_mafft.json")
+    data_folder = "../../data/malaria/pfemp_sequences/504sequences/"
+    corr = get_correlation(data_folder+"dbla.json", data_folder+"cidra.json")
     save(data_folder + "dbla_cidra_corr", corr)
     exit()
     # alignment_cporr = get_correlations(data_folder+"alignments.json", data_folder+"dbla_cidra_corr.npy")
