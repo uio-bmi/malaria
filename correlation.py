@@ -1,11 +1,12 @@
-from pyvg import Graph, Path, Alignment
-from pyvg.conversion import get_json_paths_from_json
-
-import offsetbasedgraph as obg
-import numpy as np
 import json
-from malaria.edgestruct import create_corr_struct, \
+
+from pyvg import Graph, Alignment
+import offsetbasedgraph as obg
+
+from malaria.corrstruct import create_corr_struct, \
     get_path_correlation, predict_path, save, load
+
+from malaria.edgestruct import np_create_corr_struct
 
 
 def get_alignments(filename):
@@ -27,7 +28,7 @@ def get_correlation(predictor_graph_name, outcome_graph_name):
     M = len(o_graph.nodes) + 1
     N = len(p_graph.nodes) + 1
 
-    return create_corr_struct(
+    return np_create_corr_struct(
         predictor_nodes, outcome_nodes,
         M, N)
 
@@ -66,9 +67,11 @@ def main(alignments_file_name, corr_file_name):
 
 if __name__ == "__main__":
     import sys
-    data_folder = "../../data/malaria/pfemp_sequences/150genes/"
-    corr = get_correlation(data_folder+"dbla.json", data_folder+"cidra.json")
+    data_folder = "./504/"  # "../../data/malaria/pfemp_sequences/150genes/"
+    corr = get_correlation(data_folder+"dbla_mafft.json",
+                           data_folder+"cidra_mafft.json")
     save(data_folder + "dbla_cidra_corr", corr)
+    exit()
     # alignment_cporr = get_correlations(data_folder+"alignments.json", data_folder+"dbla_cidra_corr.npy")
     # np.save(data_folder + "tmp_align_corr.npy", alignment_corr)
     res = main(sys.argv[1],
