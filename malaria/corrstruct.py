@@ -7,7 +7,7 @@ def save(filename, struct):
 
 
 def load(filename, struct):
-    return np.load(filename+".npy")
+    return np.load(filename)
 
 
 def create_corr_struct(predictor_paths, outcome_paths, M, N):
