@@ -6,3 +6,9 @@
 *.fa
 *.json
 *.txt
+*.interval
+*.np
+*.gitignore
+__pycache__
+.cache
+*.pyc

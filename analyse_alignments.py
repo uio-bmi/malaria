@@ -16,8 +16,10 @@ for alignment in alignments:
     alignment_intervals.append(alignment)
     i += 1
 
+print("Found %d alignments" % len(alignment_intervals))
+
 paths = []
-f = open("paths.txt")
+f = open(sys.argv[3])
 j = 0
 for path in f: 
     indexed = NumpyIndexedInterval.from_file(path.strip() + ".interval")
@@ -26,36 +28,38 @@ for path in f:
     paths.append(interval)
     j += 1
 
+print("Found %d paths" % len(paths))
+
 def show_sim_matrix():
     similarities = np.zeros((len(paths), len(paths)))
     for i, path in enumerate(paths):
         print(i)
         for j, path2 in enumerate(paths):
             match = path.overlap(path2) / path2.length()
-            print(match)
             similarities[i, j] = match
-            #if j >= 10:
-            #    break
+            if j >= 15:
+                break
            
-        #if i >= 10:
-        #    break
+        if i >= 15:
+            break
 
     with open("sim_matrix.np", "w") as f:
         np.savetxt(f, similarities)
     print(similarities)
+    print(similarities[4-1, 13-1])
 
 #show_sim_matrix()
 #import sys
 #sys.exit()
 
-print(sequence_graph.get_interval_sequence(paths[3]))
-print(sequence_graph.get_interval_sequence(alignment_intervals[0]))
+#print(sequence_graph.get_interval_sequence(paths[3]))
+#print(sequence_graph.get_interval_sequence(alignment_intervals[0]))
 
-print(paths[3])
-print(alignment_intervals[0])
+#print(paths[3])
+#print(alignment_intervals[0])
     
 i = 0
-alignment_intervals = [Interval(0, 1, [12, 14, 16, 19, 24, 26, 30, 33, 35, 37, 42, 43, 46], graph)]
+#alignment_intervals = [Interval(0, 1, [12, 14, 16, 19, 24, 26, 30, 33, 35, 37, 42, 43, 46], graph)]
 for alignment in alignment_intervals:
     print("Alignment %d (length: %d) top matches:" % (i, alignment.length()))
     j = 0
