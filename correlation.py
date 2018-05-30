@@ -6,6 +6,8 @@ import offsetbasedgraph as obg
 from malaria.corrstruct import create_corr_struct, \
     get_path_correlation, predict_path, save, load
 
+from malaria.correlation import NodeModel
+
 from malaria.edgestruct import np_create_corr_struct
 
 
