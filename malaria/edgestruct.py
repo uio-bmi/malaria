@@ -68,6 +68,15 @@ def get_path_correlation(corr_struct, nodes):
     return corr_vec
 
 
+def np_get_path_correlation(corr_struct, nodes):
+    corr_vec = defaultdict(int)
+    for edge in zip([0] + nodes[:-1], nodes):
+        for out_edge, val in corr_struct[edge].items():
+            corr_vec[out_edge] += val
+
+    return corr_vec
+
+
 def predict_path(corr, graph):
     next_edges = [e for e in corr if e[0] == 0]
     nodes = []

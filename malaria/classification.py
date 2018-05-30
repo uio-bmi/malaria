@@ -3,12 +3,21 @@ from sklearn.linear_model import LogisticRegression
 from collections import defaultdict
 
 
+class DummyModel:
+    def __init__(self, out):
+        self._out = out
+
+    def predict(self, input):
+        return self._out
+
+
 class NodeModel:
     def __init__(self, predictor_graph, outcome_graph):
-        self.edges = np.array([(getattr(edge, "from"), edge.to)
+        self.edges = np.array([(edge.from_node, edge.to_node)
                                for edge in predictor_graph.edges])
         # self.nodes = np.array([node.id for node in outcome_graph.nodes])
-        self.edge_lookup = {edge: i for i, edge in enumerate(self.edges)}
+        self.edge_lookup = {(edge.from_node, edge.to_node): i
+                            for i, edge in enumerate(predictor_graph.edges)}
         # self.node_lookup = {node: i for i, node in enumerate(self.nodes)}
 
     def fit(self, predictor_paths, outcome_paths):
@@ -22,8 +31,16 @@ class NodeModel:
                 idx_dict[node].append(i)
                 next_dict[node].append(i)
         self.models = {}
+        N = len(idx_dict.keys())
+        i = 0
         for node, idx_list in idx_dict.items():
+            if i % 100 == 0:
+                print("Node %s/%s" % (i, N))
+            i += 1
             nexts = np.array(next_dict[node])
+            if np.unique(nexts).size == 1:
+                self.models[node] = DummyModel(nexts[0])
+                continue
             features = predictors[idx_list]
             self.models[node] = LogisticRegression()
             self.models[node].fit(features, nexts)

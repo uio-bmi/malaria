@@ -27,6 +27,7 @@ def get_sequence(sequence_graph, node_ids):
 
 
 def train_model(predictor_graph_name, outcome_graph_name):
+    print("Training")
     pred_graph = Graph.from_file(predictor_graph_name)
     out_graph = Graph.from_file(outcome_graph_name)
     model = NodeModel(pred_graph, out_graph)
@@ -40,9 +41,11 @@ def train_model(predictor_graph_name, outcome_graph_name):
 
 
 def predict_sequences(model, alignments, sequence_graph):
+    print("Predicting")
     paths = get_path_dict(alignments)
     predicted_paths = {name: model.predict(path) for
                        name, path in paths.items()}
+    return predicted_paths
     sequence_graph = obg.SequenceGraph.from_file(sequence_graph)
     sequences = {name: get_sequence(sequence_graph, path)
                  for name, path in predicted_paths.items()}
@@ -58,6 +61,7 @@ if __name__ == "__main__":
     sequences = predict_sequences(
         model, test_alignments,
         outcome_graph_name.replace(".json", ".nobg.sequences"))
+    f = open("out.txt", "w")
     for name, seq in sequences:
-        print(">" + name)
-        print seq
+        f.write(">" + name + "\n")
+        f.write(str(seq)+"\n")
