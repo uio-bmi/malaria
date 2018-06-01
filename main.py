@@ -9,7 +9,7 @@ def get_path_dict(filename):
     alignments = (json.loads(line) for line in open(filename))
     alignments = (Alignment.from_json(alignment) for alignment in alignments)
     return {alignment.name: [mapping.start_position.node_id
-                             for mapping in alignments.path]
+                             for mapping in alignment.path.mappings]
             for alignment in alignments}
 
 
@@ -45,19 +45,25 @@ def predict_sequences(model, alignments, sequence_graph):
     paths = get_path_dict(alignments)
     predicted_paths = {name: model.predict(path) for
                        name, path in paths.items()}
-    return predicted_paths
     sequence_graph = obg.SequenceGraph.from_file(sequence_graph)
     sequences = {name: get_sequence(sequence_graph, path)
                  for name, path in predicted_paths.items()}
     return sequences
-
 
 if __name__ == "__main__":
     import sys
     predictor_graph_name = sys.argv[1]
     outcome_graph_name = sys.argv[2]
     test_alignments = sys.argv[3]
-    model = train_model(predictor_graph_name, outcome_graph_name)
+    # get_path_dict(test_alignments)
+    # model = train_model(predictor_graph_name, outcome_graph_name)
+    import pickle
+    model = pickle.load(open("tmpmodel.pkl", "rb"))
+    # try:
+    #     with open("tmpmodel.pkl", "wb") as f:
+    #         pickle.dump(model, f, pickle.HIGHEST_PROTOCOL)
+    # except:
+    #    pass
     sequences = predict_sequences(
         model, test_alignments,
         outcome_graph_name.replace(".json", ".nobg.sequences"))

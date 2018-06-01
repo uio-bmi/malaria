@@ -56,7 +56,14 @@ class NodeModel:
         features = self._path_to_feature_vector(predictor_path)[None, :]
         cur_node = 0
         outcome_path = []
+        i = 0
         while cur_node in self.models:
-            cur_node = self.models[cur_node].predict(features)
+            print(i, cur_node)
+            last_node = cur_node
+            cur_node = int(self.models[cur_node].predict(features))
+            if last_node == cur_node:
+                print(cur_node)
+                raise
             outcome_path.append(cur_node)
+            i += 1
         return outcome_path
