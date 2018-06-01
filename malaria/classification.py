@@ -29,7 +29,7 @@ class NodeModel:
         for i, path in enumerate(outcome_paths):
             for node, next_node in zip([0]+path[:-1], path):
                 idx_dict[node].append(i)
-                next_dict[node].append(i)
+                next_dict[node].append(next_node)
         self.models = {}
         N = len(idx_dict.keys())
         i = 0
