@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC, SVC
 from collections import defaultdict
 
 
@@ -19,6 +20,9 @@ class NodeModel:
         self.edge_lookup = {(edge.from_node, edge.to_node): i
                             for i, edge in enumerate(predictor_graph.edges)}
         # self.node_lookup = {node: i for i, node in enumerate(self.nodes)}
+
+    def _get_classifier(self):
+        return LogisticRegression()
 
     def fit(self, predictor_paths, outcome_paths):
         predictors = np.zeros((len(predictor_paths), self.edges.shape[0]))
@@ -42,7 +46,7 @@ class NodeModel:
                 self.models[node] = DummyModel(nexts[0])
                 continue
             features = predictors[idx_list]
-            self.models[node] = LogisticRegression()
+            self.models[node] = LogisticRegression(penalty="l1", C=2)
             self.models[node].fit(features, nexts)
 
     def _path_to_feature_vector(self, path):
@@ -67,3 +71,8 @@ class NodeModel:
             outcome_path.append(cur_node)
             i += 1
         return outcome_path
+
+
+class NodeModelSVM(NodeModel):
+    def _get_classifier(self):
+        return SVC(decision_function_shape="ovo")

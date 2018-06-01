@@ -1,9 +1,10 @@
 import json
-from malaria.classification import NodeModel
+from malaria.classification import NodeModel, NodeModelSVM
 
 import offsetbasedgraph as obg
 from pyvg import Graph, Alignment
 
+classifier = NodeModelSVM
 
 def get_path_dict(filename):
     alignments = (json.loads(line) for line in open(filename))
@@ -30,7 +31,7 @@ def train_model(predictor_graph_name, outcome_graph_name, train_alignmens=None):
     print("Training")
     pred_graph = Graph.from_file(predictor_graph_name)
     out_graph = Graph.from_file(outcome_graph_name)
-    model = NodeModel(pred_graph, out_graph)
+    model = classifier(pred_graph, out_graph)
     if train_alignments is not None:
         pred_paths = get_path_dict(train_alignments)
     else:

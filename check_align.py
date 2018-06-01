@@ -40,10 +40,11 @@ if __name__ == "__main__":
     linear_scores = [item[1] for item in linear_scores]
     print(len(graph_scores))
     print(len(linear_scores))
-    plt.scatter(graph_scores, linear_scores)
-    plt.show()
     print("Mean graph:: ", sum(res_graph.values())/len(res_graph))
     print("Mean graph:: ", sum(res_linear.values())/len(res_linear))
+    plt.scatter(linear_scores, graph_scores)
+    plt.plot([0.65,1], [0.65, 1])
+    plt.show()
 
     
 
