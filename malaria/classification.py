@@ -75,4 +75,4 @@ class NodeModel:
 
 class NodeModelSVM(NodeModel):
     def _get_classifier(self):
-        return SVC(decision_function_shape="ovo")
+        return SVC(decision_function_shape="ovo", C=0.5) # , kernel="poly", degree=2)

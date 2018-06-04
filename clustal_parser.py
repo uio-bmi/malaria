@@ -50,7 +50,7 @@ def test():
     lookup = parse_file("train.clustal")
     domains = set(itertools.chain.from_iterable(lookup.values()))
     for domain in domains:
-        get_domain(lookup, domain, "1000_train_dna.fasta_all.fasta")
+        get_domain(lookup, domain, "all.fasta")
     print("FINISHED!")
     # get_domain(lookup, "DBLa", "1000_train_dna.fasta_all.fasta")
 
