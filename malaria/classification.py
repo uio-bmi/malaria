@@ -1,4 +1,5 @@
 import numpy as np
+import sklearn.linear_model.LogisticRegression 
 from collections import defaultdict
 
 class SparseEdges:
@@ -41,7 +42,7 @@ class NodeModel:
         pass
 
     def predict(self, predictor_path):
-        pass
+
 
 
 class LogisticNodeModel:
