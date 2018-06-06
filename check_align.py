@@ -41,9 +41,11 @@ if __name__ == "__main__":
     print(len(graph_scores))
     print(len(linear_scores))
     print("Mean graph:: ", sum(res_graph.values())/len(res_graph))
-    print("Mean graph:: ", sum(res_linear.values())/len(res_linear))
+    print("Mean linear:: ", sum(res_linear.values())/len(res_linear))
     plt.scatter(linear_scores, graph_scores)
     plt.plot([0.65,1], [0.65, 1])
+    plt.xlabel("Linear")
+    plt.ylabel("Graph")
     plt.show()
 
     
