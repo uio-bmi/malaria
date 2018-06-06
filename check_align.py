@@ -12,8 +12,11 @@ def check_align(seq1, seq2):
 def main(pred_seqs, true_seqs):
     pairs = {}
     for name, seq in pred_seqs.items():
-        pairs[name] = (seq, true_seqs[name])
-        
+        try:
+            pairs[name] = (seq, true_seqs[name])
+        except KeyError:
+            print("Error: %s not found in true sequences." % name) 
+
     vals = {name: check_align(*pair) for name, pair in pairs.items()}
     return vals
 
@@ -33,11 +36,19 @@ if __name__ == "__main__":
     print("Res graph: %d" % len(res_linear))
     print(res_graph)
     print(res_linear)
-    graph_scores = sorted(res_graph.items(), key=lambda x: x[0])
-    graph_scores = [item[1] for item in graph_scores]
+
+    graph_scores = []
+    linear_scores = []
+    for seq_name, score in res_graph.items():
+        if seq_name in res_linear:
+            graph_scores.append(score)
+            linear_scores.append(res_linear[seq_name])
+    
+    #graph_scores = sorted(res_graph.items(), key=lambda x: x[0])
+    #graph_scores = [item[1] for item in graph_scores]
     print("N linear: %d" % len(res_linear.items()))
-    linear_scores = sorted(res_linear.items(), key=lambda x: x[0])
-    linear_scores = [item[1] for item in linear_scores]
+    #linear_scores = sorted(res_linear.items(), key=lambda x: x[0])
+    #linear_scores = [item[1] for item in linear_scores]
     print(len(graph_scores))
     print(len(linear_scores))
     print("Mean graph:: ", sum(res_graph.values())/len(res_graph))

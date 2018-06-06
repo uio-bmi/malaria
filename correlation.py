@@ -58,9 +58,9 @@ def main(alignments_file_name, corr_file_name):
     corrs = {path.name: get_correlations(path.path, corr_struct)
              for path in paths}
     print(len(corrs))
-    cidra_graph = obg.Graph.from_file(data_folder + "cidra_mafft.nobg")
+    cidra_graph = obg.Graph.from_file(data_folder + "cidra.nobg")
     cidra_sequence_graph = obg.SequenceGraph.from_file(
-        data_folder + "cidra_mafft.nobg.sequences")
+        data_folder + "cidra.nobg.sequences")
     predicted = {name: predict_path(corr, cidra_graph)
                  for name, corr in corrs.items()}
     return {name: get_sequence(cidra_sequence_graph, pred)
@@ -69,8 +69,8 @@ def main(alignments_file_name, corr_file_name):
 
 if __name__ == "__main__":
     import sys
-    data_folder = "../../data/malaria/pfemp_sequences/504sequences/"
-    corr = get_correlation(data_folder+"dbla_mafft.json", data_folder+"cidra_mafft.json")
+    data_folder = "../../data/malaria/pfemp_sequences/907sequences/"
+    corr = get_correlation(data_folder+"dbla.json", data_folder+"cidra.json")
     save(data_folder + "dbla_cidra_corr", corr)
     exit()
     # alignment_cporr = get_correlations(data_folder+"alignments.json", data_folder+"dbla_cidra_corr.npy")
