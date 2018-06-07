@@ -61,6 +61,9 @@ def predict_sequences(model, alignments, sequence_graph):
 if __name__ == "__main__":
     import sys
     import pickle
+    
+
+
     predictor_graph_name = sys.argv[1]
     outcome_graph_name = sys.argv[2]
     test_alignments = sys.argv[3]

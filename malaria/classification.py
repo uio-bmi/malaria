@@ -15,14 +15,8 @@ class DummyModel:
 
 
 class NodeModel:
-    def __init__(self, predictor_graph, outcome_graph):
-        # self.edges = np.array([(edge.from_node, edge.to_node)
-        # for edge in predictor_graph.edges])
-        # self.nodes = np.array([node.id for node in outcome_graph.nodes])
+    def __init__(self, predictor_graph, outcome_graph=None):
         self._create_edge_lookup(predictor_graph.edges)
-        # self.edge_lookup = {(edge.from_node, edge.to_node): i
-        #                     for i, edge in enumerate(predictor_graph.edges)}
-        # self.node_lookup = {node: i for i, node in enumerate(self.nodes)}
 
     def _create_edge_lookup(self, edges):
         adj_list = defaultdict(set)
@@ -35,39 +29,35 @@ class NodeModel:
         self.edge_lookup.update({edge: i+1 for i, edge in enumerate(edges)})
 
     def _get_classifier(self):
-        return LogisticRegression(multi_class="multinomial") # , penalty="l1", C=0.01)
+        return LogisticRegression(penalty="l1", C=2)
+        # LogisticRegression(multi_class="multinomial") # , penalty="l1", C=0.01)
 
-    def set_pca(self, features):
-        print(features.shape)
-        self.pca = PCA(n_components=1000)
-        self.pca.fit(features)
-
-    def fit(self, predictor_paths, outcome_paths):
+    def get_X_matrix(self, predictor_paths):
         predictors = np.zeros((len(predictor_paths), self.n_features))
         for i, predictor_path in enumerate(predictor_paths):
             predictors[i, :] = self._path_to_feature_vector(predictor_path)
-        # self.set_pca(predictors)
-        # predictors = self.pca.transform(predictors)
+        return predictors
+
+    def get_Y_dicts(self, outcome_paths):
         idx_dict = defaultdict(list)
         next_dict = defaultdict(list)
         for i, path in enumerate(outcome_paths):
             for node, next_node in zip([0]+path[:-1], path):
                 idx_dict[node].append(i)
                 next_dict[node].append(next_node)
+        return idx_dict, next_dict
+
+    def fit(self, predictor_paths, outcome_paths):
+        X = self.get_X_matrix(predictor_paths)
+        idx_dict, next_dict = self.get_Y_dicts(outcome_paths)
         self.models = {}
-        N = len(idx_dict.keys())
-        i = 0
-        print(predictors.size)
         for node, idx_list in idx_dict.items():
-            if i % 100 == 0:
-                print("Node %s/%s" % (i, N))
-            i += 1
             nexts = np.array(next_dict[node])
             if np.unique(nexts).size == 1 or not len(idx_list):
                 self.models[node] = DummyModel(nexts[0])
                 continue
-            features = predictors[idx_list]
-            self.models[node] = LogisticRegression(penalty="l1", C=2)
+            features = X[idx_list]
+            self.models[node] = self._get_classifier()
             self.models[node].fit(features, nexts)
 
     def _path_to_feature_vector(self, path):
@@ -79,7 +69,6 @@ class NodeModel:
 
     def predict(self, predictor_path):
         features = self._path_to_feature_vector(predictor_path)[None, :]
-        # features = self.pca.transform(features)
         cur_node = 0
         outcome_path = []
         i = 0
