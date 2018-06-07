@@ -9,3 +9,9 @@
 .idea
 *.tmp
 *.msa
+*.interval
+*.np
+*.gitignore
+__pycache__
+.cache
+*.pyc

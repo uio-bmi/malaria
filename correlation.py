@@ -6,6 +6,8 @@ import offsetbasedgraph as obg
 from malaria.corrstruct import create_corr_struct, \
     get_path_correlation, predict_path, save, load
 
+from malaria.correlation import NodeModel
+
 from malaria.edgestruct import np_create_corr_struct
 
 
@@ -67,7 +69,7 @@ def main(alignments_file_name, corr_file_name):
 
 if __name__ == "__main__":
     import sys
-    data_folder = "../../data/malaria/pfemp_sequences/504sequences/"
+    data_folder = "../../data/malaria/pfemp_sequences/907sequences/"
     corr = get_correlation(data_folder+"dbla.json", data_folder+"cidra.json")
     save(data_folder + "dbla_cidra_corr", corr)
     exit()

@@ -1,5 +1,5 @@
 import sys
-
+from . import clustal_parser
 
 """
 Steps when creating data.
@@ -16,11 +16,11 @@ Step 5: Creat vg graphs, convert to json and creat ob graphs for both domains
 
 class DataCreator:
     def __init__(self, protein_sequences_file_name, domain_predictions_file_name):
-        self.protein_sequences_file_name = protein_sequences_file_name
-        self.domain_predictions_file_name = domain_predictions_file_name
+        self.proteins_file_name = protein_sequences_file_name
+        self.domains = clustal_parser.parse_file(self.domain_predictions_file_name)
 
-    def run(self):
-        self.
+    def get_sequences_in_domain_predictions(self):
+        
 
 
 
