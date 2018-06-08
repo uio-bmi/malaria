@@ -23,13 +23,13 @@ Step 5: Creat vg graphs, convert to json and creat ob graphs for both domains
 """
 
 if __name__ == "__main__":
-    assert len(sys.argv) == 5, "Usage: main.py fasta_sequences.fasta domain_predictions.clustal n_test n_train"
+    assert len(sys.argv) == 6, "Usage: main.py fasta_sequences.fasta domain_predictions.clustal n_test n_train n_train_in_graph"
 
     creator = DataCreator(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]))
 
     logging.info("Running mafft")
-    run_mafft("dbla_train.fasta", "dbla.msa")
-    run_mafft("cidra_train.fasta", "cidra.msa")
+    run_mafft("dbla_train.fasta", "dbla.msa", limit_to_n_first_sequences=int(sys.argv[5]))
+    run_mafft("cidra_train.fasta", "cidra.msa", limit_to_n_first_sequences=int(sys.argv[5]))
 
     logging.info("Constructing graphs")
     construct_graph_from_msa("dbla.msa", "dbla.vg")

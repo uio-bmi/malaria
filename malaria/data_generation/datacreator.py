@@ -13,7 +13,7 @@ logging.basicConfig(
 
 
 class DataCreator:
-    def __init__(self, protein_sequences_file_name, domain_predictions_file_name, n_test, n_train):
+    def __init__(self, protein_sequences_file_name, domain_predictions_file_name, n_train, n_test):
         self.n_test = n_test
         self.n_train = n_train
         self.proteins_file_name = protein_sequences_file_name
