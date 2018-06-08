@@ -6,6 +6,9 @@
 *.fa
 *.json
 *.txt
+.idea
+*.tmp
+*.msa
 *.interval
 *.np
 *.gitignore
