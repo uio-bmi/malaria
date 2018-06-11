@@ -60,6 +60,8 @@ def predict_sequences(model, alignments, sequence_graph):
 
 if __name__ == "__main__":
     malaria.interface.main()
+    # python3 main.py --dbla_graph dbla.json --dbla_paths graph_alignments_train.json --cidra_paths graph_alignments_train_cidra.json --test_paths graph_alignments.json --cidra_seq cidra.nobg.sequences -o testrun/
+
     # import sys
     # import pickle
     # predictor_graph_name = sys.argv[1]

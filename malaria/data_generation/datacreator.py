@@ -77,7 +77,7 @@ class DataCreator:
         logging.info("Creating sets. Train size: %d, test size: %d"
                         % (self.n_train, self.n_test))
         n_tot = self.n_train + self.n_test
-        assert n_tot <= len(self.unique_sequence_entries), "There are fewer sequences than sum of set sizes"
+        assert n_tot <= len(self.unique_sequence_entries), "There are fewer sequences than sum of set sizes. There are %d sequences." % len(self.unique_sequence_entries)
 
         sequences = self.unique_sequence_entries
         shuffle(sequences)

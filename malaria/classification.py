@@ -50,7 +50,12 @@ class NodeModel:
         X = self.get_X_matrix(predictor_paths)
         idx_dict, next_dict = self.get_Y_dicts(outcome_paths)
         self.models = {}
+        N = len(list(idx_dict.keys()))
+        i = 0 
         for node, idx_list in idx_dict.items():
+            if i % 100 == 0:
+                print("\t Node %s of %s" % (i, N))
+            i += 1
             nexts = np.array(next_dict[node])
             if np.unique(nexts).size == 1 or not len(idx_list):
                 self.models[node] = DummyModel(nexts[0])
