@@ -30,7 +30,6 @@ class NodeModel:
 
     def _get_classifier(self):
         return LogisticRegression(penalty="l1", C=2)
-        # LogisticRegression(multi_class="multinomial") # , penalty="l1", C=0.01)
 
     def get_X_matrix(self, predictor_paths):
         predictors = np.zeros((len(predictor_paths), self.n_features))
@@ -82,7 +81,7 @@ class NodeModel:
 
 class NodeModelSVM(NodeModel):
     def _get_classifier(self):
-        return SVC(decision_function_shape="ovo") # , kernel="poly", degree=2, C=0.5)
+        return SVC(decision_function_shape="ovo")
 
 
 class NodeModelRF(NodeModel):
