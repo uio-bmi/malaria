@@ -3,6 +3,11 @@ from malaria.classification import NodeModel, NodeModelSVM, NodeModelRF
 import malaria.interface
 import offsetbasedgraph as obg
 from pyvg import Graph, Alignment
+import logging
+
+logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s, %(levelname)s: %(message)s")
 
 classifier = NodeModelRF
 

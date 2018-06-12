@@ -64,7 +64,8 @@ def test(args, model=None):
     print("Predicting")
     N = len(paths)
     i = 0
-    with open(args.out+"predicted_cidra_sequences_%s.fasta" % model.name, "w") as f:
+    out_file = args.out+"predicted_cidra_sequences_%s.fasta" % model.name
+    with open(out_file, "w") as f:
         for name, path in paths.items():
             if i % 100 == 0:
                 print("\t Node %s of %s" % (i, N))
@@ -72,6 +73,7 @@ def test(args, model=None):
             seq = predict_sequence(path, model, args.cidra_seq)
             f.write(">" + name + "\n")
             f.write(str(seq).upper()+"\n")
+            logging.info("Wrote predictions to %s" % (out_file))
     
     #predicted_paths = {name: model.predict(path) for
     #                   name, path in paths.items()}
