@@ -1,6 +1,6 @@
 import json
 from malaria.classification import NodeModel, NodeModelSVM, NodeModelRF
-
+import malaria.interface
 import offsetbasedgraph as obg
 from pyvg import Graph, Alignment
 
@@ -59,20 +59,23 @@ def predict_sequences(model, alignments, sequence_graph):
     return sequences
 
 if __name__ == "__main__":
-    import sys
-    import pickle
-    predictor_graph_name = sys.argv[1]
-    outcome_graph_name = sys.argv[2]
-    test_alignments = sys.argv[3]
-    train_alignments = sys.argv[4]
-    train_cidra_alignments = sys.argv[5] if len(sys.argv) > 5 else None
-    model = train_model(predictor_graph_name, outcome_graph_name, train_alignments, train_cidra_alignments)
-    # model = pickle.load(open("tmpmodel.pkl", "rb"))
-    pickle.dump(model, open("tmpmodel.pkl", "wb"), pickle.HIGHEST_PROTOCOL)
-    sequences = predict_sequences(
-        model, test_alignments,
-        outcome_graph_name.replace(".json", ".nobg.sequences"))
-    f = open("out.txt", "w")
-    for name, seq in sequences.items():
-        f.write(">" + name + "\n")
-        f.write(str(seq).upper()+"\n")
+    malaria.interface.main()
+    # python3 main.py --dbla_graph dbla.json --dbla_paths graph_alignments_train.json --cidra_paths graph_alignments_train_cidra.json --test_paths graph_alignments.json --cidra_seq cidra.nobg.sequences -o testrun/
+
+    # import sys
+    # import pickle
+    # predictor_graph_name = sys.argv[1]
+    # outcome_graph_name = sys.argv[2]
+    # test_alignments = sys.argv[3]
+    # train_alignments = sys.argv[4]
+    # train_cidra_alignments = sys.argv[5] if len(sys.argv) > 5 else None
+    # model = train_model(predictor_graph_name, outcome_graph_name, train_alignments, train_cidra_alignments)
+    # # model = pickle.load(open("tmpmodel.pkl", "rb"))
+    # pickle.dump(model, open("tmpmodel.pkl", "wb"), pickle.HIGHEST_PROTOCOL)
+    # sequences = predict_sequences(
+    #     model, test_alignments,
+    #     outcome_graph_name.replace(".json", ".nobg.sequences"))
+    # f = open("out.txt", "w")
+    # for name, seq in sequences.items():
+    #     f.write(">" + name + "\n")
+    #     f.write(str(seq).upper()+"\n")

@@ -28,9 +28,12 @@ def plot_hist(vals):
 if __name__ == "__main__":
     import sys
     pred_graph = get_seqs(sys.argv[1])
-    pred_linear = get_seqs(sys.argv[2])
+
     true = get_seqs(sys.argv[3])
     res_graph = main(pred_graph, true)
+    print("###GRAPH:", sum(res_graph.values())/len(res_graph))
+    exit()
+    pred_linear = get_seqs(sys.argv[2])
     res_linear = main(pred_linear, true)
     print("Res graph: %d" % len(res_graph))
     print("Res graph: %d" % len(res_linear))
