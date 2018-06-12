@@ -7,12 +7,14 @@ n_graph=$5
 
 DATA_PATH="data/n_train${n_train}n_test${n_test}n_graph${n_graph}"
 mkdir -p $DATA_PATH
-
+cd $DATA_PATH
+ls
 echo "Data path: $DATA_PATH"
 
 
-python3 malaria/data_generation/main.py $1 $2 $3 $4 $5
-
+python3 ../../malaria/data_generation/main.py $1 $2 $3 $4 $5
+makeblastdb -in dbla_train.fasta -parse_seqids -dbtype nucl
+cd ../../
 
 # Align to graph
 echo "Aligning"
