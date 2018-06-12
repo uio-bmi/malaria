@@ -1,5 +1,6 @@
 from Bio import SeqIO, pairwise2
 import matplotlib.pyplot as plt
+import logging
 
 def get_seqs(filename):
     seqs = SeqIO.to_dict(SeqIO.parse(filename, "fasta"))
@@ -32,13 +33,10 @@ if __name__ == "__main__":
     true = get_seqs(sys.argv[3])
     res_graph = main(pred_graph, true)
     print("###GRAPH:", sum(res_graph.values())/len(res_graph))
-    exit()
     pred_linear = get_seqs(sys.argv[2])
     res_linear = main(pred_linear, true)
     print("Res graph: %d" % len(res_graph))
     print("Res graph: %d" % len(res_linear))
-    print(res_graph)
-    print(res_linear)
 
     graph_scores = []
     linear_scores = []
@@ -56,11 +54,13 @@ if __name__ == "__main__":
     print(len(linear_scores))
     print("Mean graph:: ", sum(res_graph.values())/len(res_graph))
     print("Mean linear:: ", sum(res_linear.values())/len(res_linear))
-    plt.scatter(linear_scores, graph_scores)
-    plt.plot([0.65,1], [0.65, 1])
-    plt.xlabel("Linear")
-    plt.ylabel("Graph")
-    plt.show()
-
+    try:
+        plt.scatter(linear_scores, graph_scores)
+        plt.plot([0.65,1], [0.65, 1])
+        plt.xlabel("Linear")
+        plt.ylabel("Graph")
+        plt.show()
+    except Exception:
+        logging.error("Could not show plot.")
     
 

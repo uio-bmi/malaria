@@ -73,7 +73,7 @@ def test(args, model=None):
             seq = predict_sequence(path, model, args.cidra_seq)
             f.write(">" + name + "\n")
             f.write(str(seq).upper()+"\n")
-            logging.info("Wrote predictions to %s" % (out_file))
+        logging.info("Wrote predictions to %s" % (out_file))
     
     #predicted_paths = {name: model.predict(path) for
     #                   name, path in paths.items()}
