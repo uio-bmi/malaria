@@ -15,6 +15,8 @@ class DummyModel:
 
 
 class NodeModel:
+
+    name = "logistic"
     def __init__(self, predictor_graph, outcome_graph=None):
         self._create_edge_lookup(predictor_graph.edges)
 
@@ -85,10 +87,12 @@ class NodeModel:
 
 
 class NodeModelSVM(NodeModel):
+    name = "svm"
     def _get_classifier(self):
         return SVC(decision_function_shape="ovo")
 
 
 class NodeModelRF(NodeModel):
+    name = "random_forest"
     def _get_classifier(self):
         return RandomForestClassifier()
