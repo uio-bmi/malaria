@@ -8,7 +8,6 @@ n_graph=$5
 DATA_PATH="n_train=${n_train}n_test=${n_test}n_graph=${n_graph}"
 mkdir -p data/$DATA_PATH
 cd $DATA_PATH
-
 echo "Data path: $DATA_PATH"
 
 
