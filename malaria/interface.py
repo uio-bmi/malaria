@@ -5,7 +5,8 @@ import logging
 from pyvg import Graph, Alignment
 import offsetbasedgraph as obg
 
-from .classification import NodeModel, NodeModelSVM, NodeModelRF
+from .classification import NodeModel, NodeModelSVM, \
+    NodeModelRF, NodeModelLasso
 
 
 def get_sequence(sequence_graph, node_ids):
@@ -16,7 +17,7 @@ def get_sequence(sequence_graph, node_ids):
 
 def get_path_dict(filename):
     for line in open(filename):
-        try: 
+        try:
             json.loads(str(line).strip())
         except:
             print(str(line).strip())
@@ -34,11 +35,15 @@ def get_path_dict(filename):
     
     return path_dict
 
+
 def get_model(model_name):
     models = {"logistic": NodeModel,
               "svm": NodeModelSVM,
-              "randomforest": NodeModelRF}
+              "randomforest": NodeModelRF,
+              "lasso": NodeModelLasso}
+
     return models[model_name]
+
 
 def train(args):
     print("Training")
@@ -58,13 +63,18 @@ def predict_sequence(path, model, sequence_graph):
     predicted_sequence = get_sequence(sequence_graph, predicted_path)
     return predicted_sequence
 
+
 def test(args, model=None):
     print("Testing")
     paths = args.test_paths
     print("Predicting")
     N = len(paths)
     i = 0
+    with open(args.out+"info.txt", "w") as f:
+        f.write(str(model))
+
     out_file = args.out+"predicted_cidra_sequences_%s.fasta" % model.name
+
     with open(out_file, "w") as f:
         for name, path in paths.items():
             if i % 100 == 0:
@@ -84,6 +94,7 @@ def test(args, model=None):
     #    for name, seq in sequences.items():
     #        f.write(">" + name + "\n")
     #        f.write(str(seq).upper()+"\n")
+
 
 def load_model(filename):
     return pickle.load(open(filename, "rb"))

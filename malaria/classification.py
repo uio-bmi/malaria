@@ -17,8 +17,13 @@ class DummyModel:
 class NodeModel:
 
     name = "logistic"
+    args = {}
+
     def __init__(self, predictor_graph, outcome_graph=None):
         self._create_edge_lookup(predictor_graph.edges)
+
+    def __str__(self):
+        return "%s(%s)" % (self.name, self.args)
 
     def _create_edge_lookup(self, edges):
         adj_list = defaultdict(set)
@@ -31,7 +36,7 @@ class NodeModel:
         self.edge_lookup.update({edge: i+1 for i, edge in enumerate(edges)})
 
     def _get_classifier(self):
-        return LogisticRegression(penalty="l1", C=2)
+        return LogisticRegression(**self.args)
 
     def get_X_matrix(self, predictor_paths):
         predictors = np.zeros((len(predictor_paths), self.n_features))
@@ -79,7 +84,6 @@ class NodeModel:
         outcome_path = []
         i = 0
         while cur_node in self.models:
-            last_node = cur_node
             cur_node = int(self.models[cur_node].predict(features))
             outcome_path.append(cur_node)
             i += 1
@@ -88,11 +92,19 @@ class NodeModel:
 
 class NodeModelSVM(NodeModel):
     name = "svm"
+    args = {"decision_function_shape": "ovo"}
+
     def _get_classifier(self):
-        return SVC(decision_function_shape="ovo")
+        return SVC(**self.args)
+
+
+class NodeModelLasso(NodeModel):
+    name = "lasso"
+    args = {"penalty": "l1", "C": 0.5}
 
 
 class NodeModelRF(NodeModel):
     name = "random_forest"
+
     def _get_classifier(self):
         return RandomForestClassifier()
