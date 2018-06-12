@@ -7,12 +7,13 @@ n_graph=$5
 
 DATA_PATH="n_train=${n_train}n_test=${n_test}n_graph=${n_graph}"
 mkdir -p data/$DATA_PATH
+cd $DATA_PATH
 
 echo "Data path: $DATA_PATH"
 
 
-python3 malaria/data_generation/main.py $1 $2 $3 $4 $5
-
+python3 ../../malaria/data_generation/main.py $1 $2 $3 $4 $5
+cd ../../
 
 # Align to graph
 echo "Aligning"

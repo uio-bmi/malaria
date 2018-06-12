@@ -25,7 +25,7 @@ Step 5: Creat vg graphs, convert to json and creat ob graphs for both domains
 
 if __name__ == "__main__":
 
-    assert len(sys.argv) == 6, "Usage: main.py fasta_sequences.fasta domain_predictions.clustal n_test n_train n_train_in_graph"
+    assert len(sys.argv) == 6, "Usage: main.py fasta_sequences.fasta domain_predictions.clustal n_test n_train n_train_in_graph out_path"
 
     creator = DataCreator(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]))
 
