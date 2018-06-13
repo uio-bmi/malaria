@@ -7,12 +7,15 @@ def run_blast_single_seq(fasta_entry, blast_database):
     with open("blast_seq.tmp", "w") as f:
         f.writelines([">%s\n%s" % (fasta_entry.id, fasta_entry.seq)])
 
-    blast_command = "blastn -query blast_seq.tmp -db %s -outfmt 6" % (blast_database)
+    #blast_command = "blastn -query blast_seq.tmp -db %s -outfmt 6" % (blast_database)
+    blast_command = "blastp -query blast_seq.tmp -db %s -outfmt 6" % (blast_database)
     blast_result = subprocess.check_output(blast_command.split())
     blast_result = blast_result.decode("utf-8")
-    best_hit = blast_result.split("\n")[0].split()[1]
-    print("Blasting %s" % fasta_entry.id)
-    return best_hit 
+    best_hit = blast_result.split("\n")[0].split()
+
+    best_hit_id = best_hit[1]
+    print("Blasting %s. Got best hit %s with score %s" % (fasta_entry.id, best_hit_id, best_hit[2]))
+    return best_hit_id 
         
 
 if __name__ == "__main__":

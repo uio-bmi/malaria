@@ -38,6 +38,7 @@ class DataCreator:
             if record.id in self.domains:
                 domains = self.domains[record.id]
                 if "DBLa" in domains and "CIDRa" in domains:
+                    record.protein_seq = record.seq
                     record.seq = Seq(translate(str(record.seq)))
                     self.fasta_entries_with_domains.append(record)
 
@@ -88,17 +89,21 @@ class DataCreator:
         for domain in ["DBLa", "CIDRa"]:
             for set_type, records in {"test": self.test_records, "train": self.train_records}.items():
                 file_name = "%s_%s.fasta" % (domain.lower(), set_type)
+                protein_file_name = "%s_%s_protein.fasta" % (domain.lower(), set_type)
                 n_seqs = 0
-                with open(file_name, "w") as f:
+                with open(file_name, "w") as f, open(protein_file_name, "w") as f_protein:
                     for record in records:
                         if domain in self.domains[record.id]:
                             domain_positions = self.domains[record.id][domain][0]
                             domain_sequence = record.seq[3*domain_positions[0]:3*(domain_positions[1]+1)]  # *3 since DNA
+                            domain_sequence_protein = record.protein_seq[domain_positions[0]:domain_positions[1]+1]
                             f.writelines([">%s\n" % record.id])
                             f.writelines([str(domain_sequence + "\n")])
+                            f_protein.writelines([">%s\n" % record.id])
+                            f_protein.writelines([str(domain_sequence_protein) + "\n"])
                             n_seqs += 1
 
-                logging.info("Wrote %d sequences to %s" % (n_seqs, file_name))
+                logging.info("Wrote %d sequences to %s and %s" % (n_seqs, file_name, protein_file_name))
         logging.info("Done writing files")
 
 

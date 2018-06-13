@@ -14,6 +14,7 @@ echo "Data path: $DATA_PATH"
 
 python3 ../../malaria/data_generation/main.py $1 $2 $3 $4 $5
 makeblastdb -in dbla_train.fasta -parse_seqids -dbtype nucl
+makeblastdb -in dbla_train_protein.fasta -parse_seqids -dbtype prot
 cd ../../
 
 # Align to graph
@@ -24,5 +25,6 @@ python3 align_to_graph.py $DATA_PATH/cidra_train.fasta $DATA_PATH/cidra.vg $DATA
 
 # Predict linear
 echo "Predicting linear"                                                                                                                                                                                                                                                              
-python3 ../../run_blast.py $DATA_PATH/dbla_test.fasta $DATA_PATH/dbla_train.fasta $DATA_PATH/cidra_train.fasta $DATA_PATH/linear_predictions.fasta
+python3 run_blast.py $DATA_PATH/dbla_test_protein.fasta $DATA_PATH/dbla_train_protein.fasta $DATA_PATH/cidra_train_protein.fasta $DATA_PATH/linear_predictions_protein.fasta
+backtranseq $DATA_PATH/linear_predictions_protein.fasta $DATA_PATH/linear_predictions.fasta
 #./predict_linear.sh $DATA_PATH/dbla_test.fasta $DATA_PATH/dbla_train.fasta $DATA_PATH/cidra_train.fasta > $DATA_PATH/linear_predictions.fasta

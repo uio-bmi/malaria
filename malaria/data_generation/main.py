@@ -6,6 +6,8 @@ from pyvg.construct import construct_graph_from_msa
 from pyvg.view import graph_to_json
 from pyvg.conversion import json_file_to_obg_numpy_graph
 from offsetbasedgraph import SequenceGraph
+from amino_acid_to_nucleotide import translate
+from Bio import SeqIO
 
 logging.basicConfig(
         level=logging.INFO,
@@ -23,6 +25,14 @@ Step 5: Creat vg graphs, convert to json and creat ob graphs for both domains
 
 """
 
+def protein_msa_to_dna(in_fasta, out_fasta):
+    with open(out_fasta, "w") as out_file:
+        for entry in SeqIO.parse(in_fasta, "fasta"):
+            out_file.writelines([">%s\n%s\n" % (entry.id, translate(str(entry.seq)))])
+
+    logging.info("Translated %s from protein to dna %s" % (in_fasta, out_fasta)) 
+
+
 if __name__ == "__main__":
 
     assert len(sys.argv) == 6, "Usage: main.py fasta_sequences.fasta domain_predictions.clustal n_test n_train n_train_in_graph out_path"
@@ -30,8 +40,10 @@ if __name__ == "__main__":
     creator = DataCreator(sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4]))
 
     logging.info("Running mafft")
-    run_mafft("dbla_train.fasta", "dbla.msa", limit_to_n_first_sequences=int(sys.argv[5]))
-    run_mafft("cidra_train.fasta", "cidra.msa", limit_to_n_first_sequences=int(sys.argv[5]))
+    run_mafft("dbla_train_protein.fasta", "dbla_protein.msa", gap_extension_penalty=-0.85, limit_to_n_first_sequences=int(sys.argv[5]))
+    run_mafft("cidra_train_protein.fasta", "cidra_protein.msa", gap_extension_penalty=-0.85, limit_to_n_first_sequences=int(sys.argv[5]))
+    protein_msa_to_dna("dbla_protein.msa", "dbla.msa") 
+    protein_msa_to_dna("cidra_protein.msa", "cidra.msa") 
 
     logging.info("Constructing graphs")
     construct_graph_from_msa("dbla.msa", "dbla.vg")

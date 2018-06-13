@@ -27,6 +27,16 @@ def plot_hist(vals):
     plt.show()
     
 
+def plot_curves(graph_scores, linear_scores):
+    def plt_curve(scores):
+        fails = [1-s for s in scores]
+        fails.sort()
+        counts = list(range(len(fails)))
+        plt.plot(fails, counts)
+    plt_curve(graph_scores)
+    plt_curve(linear_scores)
+    plt.show()
+
 def write_results(filename, graph_dict, linear_dict):
     triplets = ((name, graph_dict[name], linear_dict[name])
                 for name in linear_dict)
@@ -34,7 +44,7 @@ def write_results(filename, graph_dict, linear_dict):
         f.write("# " + "\t".join(("SeqId", "GraphScore", "LinearScore")) + "\n")
         f.writelines("%s\t%s\t%s\n" % triplet for triplet in triplets)
 
-        
+
 if __name__ == "__main__":
     import sys
     pred_graph = get_seqs(sys.argv[1])
@@ -64,6 +74,7 @@ if __name__ == "__main__":
     print("Mean graph:: ", sum(res_graph.values())/len(res_graph))
     print("Mean linear:: ", sum(res_linear.values())/len(res_linear))
     try:
+        plot_curves(graph_scores, linear_scores)
         plt.scatter(linear_scores, graph_scores)
         plt.plot([0.65,1], [0.65, 1])
         plt.xlabel("Linear")

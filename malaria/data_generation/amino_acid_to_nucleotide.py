@@ -23,6 +23,7 @@ amino_acid_to_dna_dict = \
         "K": "AAA",
         "R": "CGT",
         "*": "TAA",
+        "-": "---", # msa gap
         "X": "NNN" # Unknown
     }
 
