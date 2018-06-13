@@ -10,7 +10,7 @@ class DummyModel:
     def __init__(self, out):
         self._out = out
 
-    def predict(self, input):
+    def predict(self, _):
         return self._out
 
 
@@ -21,6 +21,7 @@ class NodeModel:
 
     def __init__(self, predictor_graph, outcome_graph=None):
         self._create_edge_lookup(predictor_graph.edges)
+        self.train_subjects = set([])
 
     def __str__(self):
         return "%s(%s)" % (self.name, self.args)
@@ -53,7 +54,8 @@ class NodeModel:
                 next_dict[node].append(next_node)
         return idx_dict, next_dict
 
-    def fit(self, predictor_paths, outcome_paths):
+    def fit(self, predictor_paths, outcome_paths, subjects=None):
+        self.train_subjects.update(subjects)
         X = self.get_X_matrix(predictor_paths)
         idx_dict, next_dict = self.get_Y_dicts(outcome_paths)
         self.models = {}

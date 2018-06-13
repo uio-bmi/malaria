@@ -48,7 +48,7 @@ class DataCreator:
         samples_kept = set()
         assert len(self.fasta_entries_with_domains) > 0, "Run get_sequences_in_domains_predictions first"
         for record in self.fasta_entries_with_domains:
-            sample_id = record.id.split(".")[0]
+            sample_id = record.id.split("-")[0]
             if sample_id in samples_kept:
                 continue
 

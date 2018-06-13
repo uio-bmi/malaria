@@ -8,6 +8,8 @@ import offsetbasedgraph as obg
 from .classification import NodeModel, NodeModelSVM, \
     NodeModelRF, NodeModelLasso
 
+def get_subject_id(sample_id):
+    return sample_id.split("-")[0]
 
 def get_sequence(sequence_graph, node_ids):
     interval = obg.Interval(
@@ -52,9 +54,10 @@ def train(args):
     pred_paths = [args.dbla_paths[key] for key in keys if key in args.cidra_paths]
     out_paths = [args.cidra_paths[key] for key in keys if key in args.cidra_paths]
     print("Fitting")
-    model.fit(pred_paths, out_paths)
-    pickle.dump(model, open(args.out+model.__class__.__name__+".mdl", "wb"),
-                pickle.HIGHEST_PROTOCOL)
+    subject_ids = [get_subject_id(sample_id) for sample_id in args.cidra_paths.keys()]
+    model.fit(pred_paths, out_paths, subject_ids)
+    # pickle.dump(model, open(args.out+model.__class__.__name__+".mdl", "wb"),
+    #             pickle.HIGHEST_PROTOCOL)
     return model
 
 
@@ -64,9 +67,13 @@ def predict_sequence(path, model, sequence_graph):
     return predicted_sequence
 
 
+
+
 def test(args, model=None):
     print("Testing")
     paths = args.test_paths
+    in_training = [sample_id for sample_id in args.test_paths if get_subject_id(sample_id) in model.train_subjects]
+    assert not in_training, in_training
     print("Predicting")
     N = len(paths)
     i = 0
