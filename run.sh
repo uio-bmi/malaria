@@ -16,9 +16,6 @@ echo "Putting results in $OUT_DIR"
 
 mkdir -p $OUT_DIR
 
-echo "Predicting linear"
-./predict_linear.sh $DATA_PATH/dbla_test.fasta $DATA_PATH/dbla_train.fasta $DATA_PATH/cidra_train.fasta > $OUT_DIR/linear_predictions.fasta
-
 echo "Predicting graph"
 python3 main.py --dbla_graph $DATA_PATH/dbla.json \
                 --dbla_paths $DATA_PATH/graph_alignments_train.json \
@@ -29,4 +26,4 @@ python3 main.py --dbla_graph $DATA_PATH/dbla.json \
                 --classifier $MODEL
 
 
-python3 check_align.py $OUT_DIR/graph.outpredicted_cidra_sequences_$MODEL.fasta $OUT_DIR/linear_predictions.fasta $DATA_PATH/cidra_test.fasta
+python3 check_align.py $OUT_DIR/graph.outpredicted_cidra_sequences_$MODEL.fasta $DATA_PATH/linear_predictions.fasta $DATA_PATH/cidra_test.fasta

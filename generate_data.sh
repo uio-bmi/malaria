@@ -21,3 +21,7 @@ echo "Aligning"
 python3 align_to_graph.py $DATA_PATH/dbla_test.fasta $DATA_PATH/dbla.vg $DATA_PATH/graph_alignments.json
 python3 align_to_graph.py $DATA_PATH/dbla_train.fasta $DATA_PATH/dbla.vg $DATA_PATH/graph_alignments_train.json
 python3 align_to_graph.py $DATA_PATH/cidra_train.fasta $DATA_PATH/cidra.vg $DATA_PATH/graph_alignments_train_cidra.json
+
+# Predict linear
+echo "Predicting linear"                                                                                                                                                                                                                                                              
+./predict_linear.sh $DATA_PATH/dbla_test.fasta $DATA_PATH/dbla_train.fasta $DATA_PATH/cidra_train.fasta > $DATA_PATH/linear_predictions.fasta
