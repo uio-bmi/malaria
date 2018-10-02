@@ -54,9 +54,9 @@ if __name__ == "__main__":
     print("###GRAPH:", sum(res_graph.values())/len(res_graph))
     pred_linear = get_seqs(sys.argv[2])
     res_linear = main(pred_linear, true)
-    print("Res graph: %d" % len(res_graph))
-    print("Res graph: %d" % len(res_linear))
-    write_results(sys.argv[1]+"_compare.csv", res_graph, res_linear)
+    print("N graph: %d" % len(res_graph))
+    print("N linear: %d" % len(res_linear))
+    #write_results(sys.argv[1]+"_compare.csv", res_graph, res_linear)
     graph_scores = []
     linear_scores = []
     for seq_name, score in res_graph.items():
