@@ -1,15 +1,19 @@
 from Bio import SeqIO, pairwise2
+from Bio.SubsMat import MatrixInfo as matlist
 import matplotlib.pyplot as plt
 import logging
 import csv
+
 
 def get_seqs(filename):
     seqs = SeqIO.to_dict(SeqIO.parse(filename, "fasta"))
     return {name: r.seq for name, r in seqs.items()}
 
+
 def check_align(seq1, seq2):
-    #print(seq1, seq2)
-    return pairwise2.align.globalxx(seq1, seq2, score_only=True)/len(seq2)
+    matrix = matlist.blosum62
+    return pairwise2.align.globaldx(seq1, seq2, matrix, score_only=True)/len(seq2)
+
 
 def main(pred_seqs, true_seqs):
     pairs = {}
